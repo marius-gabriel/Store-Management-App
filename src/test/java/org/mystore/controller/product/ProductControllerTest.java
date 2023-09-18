@@ -25,6 +25,6 @@ class ProductControllerTest {
     @Test
     void testInsertProduct(){
         String insertedProductMessage = controller.insertProduct(testProduct);
-        Assertions.assertEquals("Successfully inserted product: " + testProduct.toString(), insertedProductMessage);
+        Assertions.assertEquals("Product successfully inserted", insertedProductMessage);
     }
 }
