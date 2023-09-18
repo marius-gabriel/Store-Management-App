@@ -6,20 +6,20 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mystore.dao.ProductDao;
+import org.mystore.dto.ProductDto;
 
 @ExtendWith(MockitoExtension.class)
 class ProductControllerTest {
 
     @InjectMocks
     private ProductController controller;
-    private static ProductDao testProduct;
+    private static ProductDto testProduct;
     private static final String PRODUCT_NAME = "test product";
     private static final Long PRODUCT_PRICE = 1000L;
 
     @BeforeAll
     public static void getTestProduct(){
-        testProduct = new ProductDao(PRODUCT_NAME, PRODUCT_PRICE);
+        testProduct = new ProductDto(PRODUCT_NAME, PRODUCT_PRICE);
     }
 
     @Test
