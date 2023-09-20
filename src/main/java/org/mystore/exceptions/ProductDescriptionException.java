@@ -1,8 +1,6 @@
-package org.mystore.Exceptions;
+package org.mystore.exceptions;
 
 public class ProductDescriptionException extends RuntimeException{
-    String message;
-
     public ProductDescriptionException(String message){
         super(message);
     }
