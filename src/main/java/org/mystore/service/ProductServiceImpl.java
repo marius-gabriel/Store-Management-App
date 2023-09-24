@@ -1,5 +1,7 @@
 package org.mystore.service;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.mystore.exceptions.ProductNotFoundException;
 import org.mystore.model.Product;
 import org.mystore.repository.ProductRepository;
@@ -11,6 +13,9 @@ import java.util.Optional;
 
 @Service
 public class ProductServiceImpl implements ProductService {
+
+    private static final Logger logger = LogManager.getLogger(ProductServiceImpl.class);
+    public static final String PRODUCT_CANNOT_BE_FOUND = "Product with id {} cannot be found.";
 
     private final ProductRepository repository;
 
@@ -35,13 +40,17 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product changePriceForProductWith(int id, int price) {
+    public Product changePriceForProductWith(int id, int newPrice) {
         Optional<Product> optionalProduct = repository.findById(id);
         Product currentProduct;
         if (optionalProduct.isPresent())
             currentProduct = optionalProduct.get();
-        else throw new ProductNotFoundException("Unknown product with id: " + id);
-        currentProduct.setPrinceInCents((long) price);
+        else {
+            logger.error(PRODUCT_CANNOT_BE_FOUND, id);
+            throw new ProductNotFoundException("Unknown product with id: " + id);
+        }
+            logger.info("Price will be changed from {} to {} for product with id: {}", currentProduct.getPrinceInCents(), newPrice, id);
+            currentProduct.setPrinceInCents((long) newPrice);
         return repository.save(currentProduct);
     }
 
@@ -55,4 +64,5 @@ public class ProductServiceImpl implements ProductService {
         modifiedProduct.setId(id);
         return repository.save(modifiedProduct);
     }
+
 }

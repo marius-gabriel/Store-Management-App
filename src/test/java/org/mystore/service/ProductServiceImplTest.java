@@ -9,10 +9,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mystore.exceptions.ProductNotFoundException;
 import org.mystore.model.Product;
 import org.mystore.repository.ProductRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
@@ -75,6 +77,26 @@ class ProductServiceImplTest {
         when(productRepository.save(testProduct)).thenReturn(testProductWithId);
         Product result = productService.updateProductById(id, testProduct);
         Assertions.assertEquals(testProductWithId, result);
+    }
+
+    @Test
+    void testChangeProductPriceThrowException(){
+        int id = 6;
+        int price = 400;
+        when(productRepository.findById(id)).thenReturn(Optional.empty());
+        Assertions.assertThrows(ProductNotFoundException.class, () -> productService.changePriceForProductWith(id, price));
+    }
+
+    @Test
+    void testChangeProductPrice(){
+        int id = 6;
+        int price = 400;
+        Product testProduct = new Product(id, "test", PRODUCT_PRICE);
+        Product resultedProduct = new Product(id, "test", (long) price);
+        when(productRepository.findById(id)).thenReturn(Optional.of(testProduct));
+        when(productRepository.save(testProduct)).thenReturn(resultedProduct);
+        Assertions.assertDoesNotThrow(() -> productService.changePriceForProductWith(id, price));
+        Assertions.assertEquals(resultedProduct, productService.changePriceForProductWith(id, price));
     }
 
 }
